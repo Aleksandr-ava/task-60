@@ -31,14 +31,6 @@ async def user_by_id(db: Annotated[Session, Depends(get_db)], user_id: int):
                             detail="User not found")
 
 
-@router.get("/user_id/tasks")
-async def tasks_by_user_id(db: Annotated[Session, Depends(get_db)], user_id: int):
-    tasks_by_user = db.scalar(select(Task).where(Task.user_id == user_id))
-    if tasks_by_user is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"The User id {user_id} has no tasks")
-    return tasks_by_user
-
-
 @router.post("/create")
 async def create_user(db: Annotated[Session, Depends(get_db)], createuser: CreateUser):
     db.execute(insert(User).values(username=createuser.username,
